@@ -1,0 +1,5 @@
+The server needs to be run on a Windows machine,
+that has operating official WSU driver-program running.
+
+The client may be run on any machine, that has a net connection
+to the former Windows machine and receives data from it through the web.
