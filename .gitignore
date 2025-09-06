@@ -6,6 +6,7 @@ __pycache__/
 
 # C extensions
 *.so
+!/extra/libwlmData.so
 
 # Distribution / packaging
 .Python

@@ -4,19 +4,29 @@ Module to work with Angstrom WS7 wavelength meter
 
 import argparse
 import ctypes, os, sys, random, time
+import platform
 
 class WavelengthMeter:
-
-    def __init__(self, dllpath="C:\Windows\System32\wlmData.dll", debug=False):
+    def __init__(self, dllpath=None, debug=False):
         """
         Wavelength meter class.
-        Argument: Optional path to the dll. Default: "C:\Windows\System32\wlmData.dll"
+        Argument is optional path to the dll. Defaults are:
+        Windows "C:\Windows\System32\wlmData.dll"
+        Linux "./extra/libwlmData.so"
         """
+        if platform.system() == "Windows":
+            if dllpath is None: dllpath = r"C:\Windows\System32\wlmData.dll"
+            opener = ctypes.WinDLL
+        elif platform.system() == "Linux":
+            if dllpath is None: dllpath = r"./extra/libwlmData.so"
+            opener = ctypes.CDLL
+        else:
+            raise SystemError
         self.channels = []
         self.dllpath = dllpath
         self.debug = debug
         if not debug:
-            self.dll = ctypes.WinDLL(dllpath)
+            self.dll = opener(dllpath)
             self.dll.GetWavelengthNum.restype = ctypes.c_double
             self.dll.GetFrequencyNum.restype = ctypes.c_double
             self.dll.GetSwitcherMode.restype = ctypes.c_long
